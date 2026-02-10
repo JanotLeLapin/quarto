@@ -1,3 +1,6 @@
+pub mod ordi;
+mod bot_human;
+
 #[derive(Debug, Clone, Copy)]
 pub struct Piece(u8);
 
