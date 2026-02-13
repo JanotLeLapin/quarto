@@ -10,6 +10,7 @@ pub struct Human {
 
 impl Player for Human {
     fn give_piece_to_other_player(&mut self, board: &Board, stack: &Stack) -> Piece {
+        println!("Type the piece you wish to give your opponent.");
         loop {
             self.buff.clear();
             let success = stdin().read_line(&mut self.buff);
@@ -30,7 +31,7 @@ impl Player for Human {
                             false
                         }
                         other => {
-                            println!("Invalid height input \"{}\".", other as char);
+                            println!("Invalid height input \"{}\". Please try again.", other as char);
                             continue
                         }
                     };
@@ -43,7 +44,7 @@ impl Player for Human {
                             false
                         }
                         other => {
-                            println!("Invalid color input \"{}\".", other as char);
+                            println!("Invalid color input \"{}\". Please try again.", other as char);
                             continue
                         }
                     };
@@ -56,7 +57,7 @@ impl Player for Human {
                             false
                         }
                         other => {
-                            println!("Invalid hollowness input \"{}\".", other as char);
+                            println!("Invalid hollowness input \"{}\". Please try again.", other as char);
                             continue
                         }
                     };
@@ -69,15 +70,15 @@ impl Player for Human {
                             false
                         }
                         other => {
-                            println!("Invalid shape input \"{}\".", other as char);
+                            println!("Invalid shape input \"{}\". Please try again.", other as char);
                             continue
                         }
                     };
 
                     let piece = Piece::new(bright, square, tall, hollow);
 
-                    for x in 1..4 {
-                        for y in 1..4 {
+                    for x in 0..4 {
+                        for y in 0..4 {
                             if let Some(board_piece) = board.get_piece(x, y) {
                                 if board_piece == piece {
                                     println!("Piece \"{piece}\" is already on the board at coordinates ({x}, {y}).");
