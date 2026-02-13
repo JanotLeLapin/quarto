@@ -35,6 +35,20 @@ impl From<u8> for Piece {
     }
 }
 
+impl std::fmt::Display for Piece {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(if self.is_tall() { "+" } else { "-" })?;
+        f.write_str(if self.is_hollow() { "h" } else { "f" })?;
+        f.write_str(if self.is_square() {
+            if self.is_bright() { "■" } else { "□" }
+        } else {
+            if self.is_bright() { "●" } else { "○" }
+        })?;
+
+        Ok(())
+    }
+}
+
 pub struct Board(pub [[Option<Piece>; 4]; 4]);
 
 impl Board {
