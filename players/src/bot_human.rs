@@ -90,7 +90,10 @@ impl Player for Human {
 
                     return piece
                 },
-                Err(_) => continue,
+                Err(_) => {
+                    println!("Error parsing input. Please try again.");
+                    continue
+                },
             }
         }
     }
