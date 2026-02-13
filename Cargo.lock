@@ -3,5 +3,12 @@
 version = 4
 
 [[package]]
-name = "quarto"
+name = "quarto-core"
 version = "0.1.0"
+
+[[package]]
+name = "quarto-players"
+version = "0.1.0"
+dependencies = [
+ "quarto-core",
+]

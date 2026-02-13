@@ -1,10 +1,11 @@
 use std::io::{Read, stdin};
 
+use quarto_core::Piece;
+
 use crate::ordi::Player;
-use crate::Piece;
 
 pub struct Human {
-    buff: [u8; 64]
+    buff: [u8; 64],
 }
 
 impl Player for Human {
@@ -18,7 +19,7 @@ impl Player for Human {
         }
         Piece(0)
     }
-    
+
     fn play_piece(&mut self) -> u8 {
         loop {
             let success = stdin().read(&mut self.buff);
