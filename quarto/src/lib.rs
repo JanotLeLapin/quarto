@@ -28,3 +28,9 @@ impl Piece {
         (self.0 & 0x08) == 0x08
     }
 }
+
+impl From<u8> for Piece {
+    fn from(value: u8) -> Self {
+        Self(value)
+    }
+}
