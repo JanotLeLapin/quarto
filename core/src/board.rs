@@ -88,6 +88,22 @@ impl Default for Board {
     }
 }
 
+impl std::fmt::Display for Board {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for x in 0..4 {
+            for y in 0..4 {
+                match self.get_piece(x, y) {
+                    Some(p) => f.write_fmt(format_args!("{p} "))?,
+                    None => f.write_str("    ")?,
+                }
+            }
+            f.write_str("\n")?;
+        }
+
+        Ok(())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
