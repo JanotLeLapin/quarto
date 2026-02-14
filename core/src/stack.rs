@@ -1,40 +1,28 @@
 use crate::Piece;
 
-pub struct Stack(pub [Option<Piece>; 16]);
+pub struct Stack(pub u16);
 
 impl Stack {
     pub fn new() -> Self {
-        let mut arr = [None; 16];
-
-        for (i, item) in arr.iter_mut().enumerate() {
-            *item = Some(Piece(i as u8));
-        }
-
-        Stack(arr)
+        Stack(0xFFFF)
     }
 
-    pub fn find(&self, piece: Piece) -> Option<usize> {
-        self.0
-            .iter()
-            .enumerate()
-            .find(|(_, p)| Some(piece) == **p)
-            .map(|(i, _)| i)
-    }
-
-    pub fn pick(&mut self, i: usize) -> Option<Piece> {
-        if i > 16 {
-            return None;
+    pub fn has(&self, piece: Piece) -> bool {
+        if piece.0 > 0x0F {
+            return false;
         }
 
-        let piece = match self.0[i] {
-            Some(piece) => piece,
-            None => {
-                return None;
-            }
-        };
+        let bit = 2_u16.pow(piece.0 as u32);
+        (self.0 & bit) == bit
+    }
 
-        self.0[i] = None;
-        Some(piece)
+    pub fn pick(&mut self, piece: Piece) {
+        if piece.0 > 0x0F {
+            return;
+        }
+
+        let bit = 2_u16.pow(piece.0 as u32);
+        self.0 &= !bit;
     }
 }
 
@@ -52,13 +40,13 @@ mod tests {
     fn test_find() {
         let mut stack = Stack::new();
 
-        assert_eq!(Some(2), stack.find(Piece(0b0010)));
-        assert_eq!(Some(5), stack.find(Piece(0b0101)));
-        assert_eq!(None, stack.find(Piece(0b11111111)));
+        assert_eq!(true, stack.has(Piece(0b0010)));
+        assert_eq!(true, stack.has(Piece(0b0101)));
+        assert_eq!(false, stack.has(Piece(0b11111111)));
 
-        _ = stack.pick(2);
-        assert_eq!(None, stack.find(Piece(0b0010)));
-        assert_eq!(Some(5), stack.find(Piece(0b0101)));
-        assert_eq!(None, stack.find(Piece(0b11111111)));
+        stack.pick(Piece(0b0010));
+        assert_eq!(false, stack.has(Piece(0b0010)));
+        assert_eq!(true, stack.has(Piece(0b0101)));
+        assert_eq!(false, stack.has(Piece(0b11111111)));
     }
 }
