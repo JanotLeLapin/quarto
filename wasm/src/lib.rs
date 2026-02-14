@@ -102,3 +102,9 @@ impl QuartoEngine {
         self.winner
     }
 }
+
+impl Default for QuartoEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
