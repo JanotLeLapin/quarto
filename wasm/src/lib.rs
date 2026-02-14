@@ -97,4 +97,8 @@ impl QuartoEngine {
         res[1] = y as u8;
         res
     }
+
+    pub fn get_winner(&self) -> Option<u8> {
+        self.winner
+    }
 }
