@@ -179,4 +179,18 @@ mod tests {
         board.set_piece(3, 3, Some(Piece(0b0011)));
         assert_eq!(true, board.is_win_axis(0, 0, 1, 1));
     }
+
+    #[test]
+    fn test_win() {
+        let mut board = Board::new();
+
+        board.set_piece(3, 0, Some(Piece(0b0110)));
+        board.set_piece(3, 1, Some(Piece(0b0100)));
+        board.set_piece(3, 2, Some(Piece(0b1100)));
+        board.set_piece(3, 3, Some(Piece(0b1000)));
+        assert_eq!(true, board.is_win(3, 0));
+        assert_eq!(true, board.is_win(3, 1));
+        assert_eq!(true, board.is_win(3, 2));
+        assert_eq!(true, board.is_win(3, 3));
+    }
 }
