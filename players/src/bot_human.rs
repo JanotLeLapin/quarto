@@ -9,7 +9,7 @@ pub struct Human {
 }
 
 impl Player for Human {
-    fn give_piece_to_other_player(&mut self, game: &Game) -> usize {
+    fn give_piece(&mut self, game: &Game) -> usize {
         println!("Type the piece you wish to give your opponent.");
         loop {
             self.buff.clear();
