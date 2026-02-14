@@ -1,5 +1,5 @@
 use quarto_core::{Board, Game, Piece, Stack};
-use quarto_players::Player;
+use quarto_players::{Player, random::RandomBot};
 
 const PLAYER_COUNT: usize = 2;
 
@@ -71,5 +71,16 @@ pub fn main() {
             piece.is_tall(),
             piece.is_hollow()
         );
+    }
+
+    let p1 = RandomBot::default();
+    let p2 = RandomBot::default();
+
+    let mut players: [Box<dyn Player>; 2] = [Box::new(p1), Box::new(p2)];
+
+    match game_loop(&mut players) {
+        Outcome::Win(i) => println!("player {i} won"),
+        Outcome::Draw => println!("draw"),
+        Outcome::Illegal(i) => println!("player {i} attempted illegal move"),
     }
 }
