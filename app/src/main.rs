@@ -9,38 +9,44 @@ pub enum Outcome {
     Illegal(usize),
 }
 
+/// Play a single move. Returns the game end state (if any)
 pub fn game_iter(
     game: &mut Game,
-    player_idx: usize,
+    giving_player_id: usize,
     players: &mut [Box<dyn Player>; PLAYER_COUNT],
 ) -> Option<Outcome> {
+    // No pieces left to give
     if game.stack.0 == 0 {
         return Some(Outcome::Draw);
     }
 
-    let current_player = players.get_mut(player_idx).unwrap();
-    let piece = current_player.give_piece(game);
+    let giving_player = players.get_mut(giving_player_id).unwrap();
+    let given_piece = giving_player.give_piece(game);
 
-    if !game.stack.pick(piece) {
-        return Some(Outcome::Illegal(player_idx));
+    // Piece has already been played
+    if !game.stack.pick(given_piece) {
+        return Some(Outcome::Illegal(giving_player_id));
     }
 
-    let next_idx = (player_idx + 1) % PLAYER_COUNT;
-    let next_player = players.get_mut(next_idx).unwrap();
-    let (x, y) = next_player.play_piece(game, piece);
+    let placing_player_id = (giving_player_id + 1) % PLAYER_COUNT;
+    let placing_player = players.get_mut(placing_player_id).unwrap();
+    let (placed_piece_x, placed_piece_y) = placing_player.play_piece(game, given_piece);
 
-    if game.board.get_piece(x, y).is_some() {
-        return Some(Outcome::Illegal(next_idx));
+    // Coordinates weren't empty
+    if game.board.get_piece(placed_piece_x, placed_piece_y).is_some() {
+        return Some(Outcome::Illegal(placing_player_id));
     }
-    game.board.set_piece(x, y, Some(piece));
 
-    if game.board.is_win(x, y) {
-        return Some(Outcome::Win(next_idx));
+    game.board.set_piece(placed_piece_x, placed_piece_y, Some(given_piece));
+
+    if game.board.is_win(placed_piece_x, placed_piece_y) {
+        return Some(Outcome::Win(placing_player_id));
     }
 
     None
 }
 
+/// Play an entire game with the given players.
 pub fn game_loop(players: &mut [Box<dyn Player>; 2]) -> Outcome {
     let player_count = players.len();
 
@@ -96,7 +102,7 @@ pub fn main() {
     match outcome {
         Outcome::Win(i) => println!("player {i} won"),
         Outcome::Draw => println!("draw"),
-        Outcome::Illegal(i) => println!("player {i} attempted illegal move"),
+        Outcome::Illegal(i) => println!("player {i} attempted an illegal move"),
     }
 
     println!("{}", game.board);

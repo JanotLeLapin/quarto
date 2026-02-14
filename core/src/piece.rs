@@ -1,4 +1,7 @@
 #[derive(Debug, Clone, Copy, PartialEq)]
+
+/// A piece is an combination of four binary values : color, shape, height and hollowness.
+/// A piece may be "empty".
 pub struct Piece(pub u8);
 
 impl Piece {
