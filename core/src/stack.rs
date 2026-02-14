@@ -1,5 +1,6 @@
 use crate::Piece;
 
+/// The pieces that haven't been played yet.
 pub struct Stack(pub u16);
 
 impl Stack {

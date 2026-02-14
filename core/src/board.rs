@@ -2,6 +2,7 @@ use crate::Piece;
 
 const EMPTY_SLOT: Piece = Piece(0b11110000);
 
+/// The standard 4x4 Quarto board.
 pub struct Board(pub [[Piece; 4]; 4]);
 
 impl Board {
@@ -31,6 +32,7 @@ impl Board {
         };
     }
 
+    /// Checks for a win condition given starting coordinates (sx, sy) and direction (mx, my).
     fn is_win_axis(&self, sx: usize, sy: usize, mx: isize, my: isize) -> bool {
         let mut x: isize = sx as isize;
         let mut y: isize = sy as isize;
