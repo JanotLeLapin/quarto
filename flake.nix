@@ -151,6 +151,7 @@
             pkgs.wasm-pack
             pkgs.lld
             pkgs.typescript-language-server
+            pkgs.python3
           ];
 
           shellHook = ''

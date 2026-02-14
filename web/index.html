@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>hello-wasm example</title>
+  </head>
+  <body>
+    <script type="module">
+      import init, { QuartoEngine } from "./pkg/quarto_wasm.js";
+
+      init().then(() => {
+        let quarto = new QuartoEngine()
+        console.log(quarto.get_board())
+        console.log(quarto.get_stack())
+
+        quarto.place_piece(1, 2, 0b1010)
+        console.log(quarto.get_board())
+      });
+    </script>
+  </body>
+</html>
