@@ -85,6 +85,7 @@ pub fn main() {
 
     let outcome = 'outer: loop {
         for i in 0..PLAYER_COUNT {
+            println!("{}", game.board);
             println!("player {i}'s pick");
             if let Some(outcome) = game_iter(&mut game, i, &mut players) {
                 break 'outer outcome;
@@ -97,4 +98,6 @@ pub fn main() {
         Outcome::Draw => println!("draw"),
         Outcome::Illegal(i) => println!("player {i} attempted illegal move"),
     }
+
+    println!("{}", game.board);
 }
