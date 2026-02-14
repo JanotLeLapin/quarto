@@ -2,7 +2,7 @@ use std::io::stdin;
 
 use quarto_core::{Game, Piece};
 
-use crate::ordi::Player;
+use crate::Player;
 
 pub struct Human {
     buff: String,
