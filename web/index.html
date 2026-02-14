@@ -10,25 +10,33 @@
   <script type="module">
     import init, {QuartoEngine} from "./pkg/quarto_wasm.js";
 
+    let quarto
+
     init().then(() => {
-      let quarto = new QuartoEngine()
+      quarto = new QuartoEngine()
+      console.log("initialized")
+    });
 
-      while (undefined == quarto.get_winner()) {
-        console.log(quarto.get_board())
+    document.getElementById("next").addEventListener("click", (_) => {
+      console.log("clicked")
+      console.log(quarto.get_board())
 
-        let piece = quarto.give_piece()
-        quarto.pick_piece(piece)
-        console.log("will play " + piece)
-
-        let [x, y] = quarto.play_piece(piece)
-        quarto.place_piece(x, y, piece)
-        console.log("at " + x + ", " + y)
+      if (undefined != quarto.get_winner()) {
+        console.log("winner: " + quarto.get_winner())
+        return
       }
 
-      console.log(quarto.get_board())
-      console.log("winner: " + quarto.get_winner())
-    });
+      let piece = quarto.give_piece()
+      quarto.pick_piece(piece)
+      console.log("will play " + piece)
+
+      let [x, y] = quarto.play_piece(piece)
+      quarto.place_piece(x, y, piece)
+      console.log("at " + x + ", " + y)
+    })
   </script>
+
+  <button id="next">Next</button>
 </body>
 
 </html>
