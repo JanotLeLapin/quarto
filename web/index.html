@@ -1,31 +1,34 @@
 <!doctype html>
 <html lang="en-US">
-  <head>
-    <meta charset="utf-8" />
-    <title>quarto example</title>
-  </head>
-  <body>
-    <script type="module">
-      import init, { QuartoEngine } from "./pkg/quarto_wasm.js";
 
-      init().then(() => {
-        let quarto = new QuartoEngine()
+<head>
+  <meta charset="utf-8" />
+  <title>quarto example</title>
+</head>
 
-        while (undefined == quarto.get_winner()) {
-          console.log(quarto.get_board())
+<body>
+  <script type="module">
+    import init, {QuartoEngine} from "./pkg/quarto_wasm.js";
 
-          let piece = quarto.give_piece()
-          quarto.pick_piece(piece)
-          console.log("will play " + piece)
+    init().then(() => {
+      let quarto = new QuartoEngine()
 
-          let [x, y] = quarto.play_piece(piece)
-          quarto.place_piece(x, y, piece)
-          console.log("at " + x + ", " + y)
-        }
-
+      while (undefined == quarto.get_winner()) {
         console.log(quarto.get_board())
-        console.log("winner: " + quarto.get_winner())
-      });
-    </script>
-  </body>
+
+        let piece = quarto.give_piece()
+        quarto.pick_piece(piece)
+        console.log("will play " + piece)
+
+        let [x, y] = quarto.play_piece(piece)
+        quarto.place_piece(x, y, piece)
+        console.log("at " + x + ", " + y)
+      }
+
+      console.log(quarto.get_board())
+      console.log("winner: " + quarto.get_winner())
+    });
+  </script>
+</body>
+
 </html>
