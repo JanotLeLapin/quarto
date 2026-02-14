@@ -1,9 +1,11 @@
 use quarto_core::{Board, Game, Piece, Stack};
+use quarto_players::{Player, random::RandomBot};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 pub struct QuartoEngine {
     game: Game,
+    players: [Box<dyn Player>; 2],
     current_player: u8,
     winner: Option<u8>,
 }
@@ -17,6 +19,10 @@ impl QuartoEngine {
                 board: Board::new(),
                 stack: Stack::new(),
             },
+            players: [
+                Box::new(RandomBot::default()),
+                Box::new(RandomBot::default()),
+            ],
             current_player: 0,
             winner: None,
         }
@@ -67,5 +73,28 @@ impl QuartoEngine {
             return true;
         }
         false
+    }
+
+    pub fn give_piece(&mut self) -> u8 {
+        let player = match self.players.get_mut(self.current_player as usize) {
+            Some(player) => player,
+            None => unreachable!(),
+        };
+
+        player.give_piece(&self.game).0
+    }
+
+    pub fn play_piece(&mut self, piece: u8) -> Vec<u8> {
+        let mut res = vec![0, 0];
+
+        let player = match self.players.get_mut(self.current_player as usize) {
+            Some(player) => player,
+            None => unreachable!(),
+        };
+
+        let (x, y) = player.play_piece(&self.game, Piece(piece));
+        res[0] = x as u8;
+        res[1] = y as u8;
+        res
     }
 }
