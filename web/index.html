@@ -10,11 +10,21 @@
 
       init().then(() => {
         let quarto = new QuartoEngine()
-        console.log(quarto.get_board())
-        console.log(quarto.get_stack())
 
-        quarto.place_piece(1, 2, 0b1010)
+        while (undefined == quarto.get_winner()) {
+          console.log(quarto.get_board())
+
+          let piece = quarto.give_piece()
+          quarto.pick_piece(piece)
+          console.log("will play " + piece)
+
+          let [x, y] = quarto.play_piece(piece)
+          quarto.place_piece(x, y, piece)
+          console.log("at " + x + ", " + y)
+        }
+
         console.log(quarto.get_board())
+        console.log("winner: " + quarto.get_winner())
       });
     </script>
   </body>
