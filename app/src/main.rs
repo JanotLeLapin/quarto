@@ -21,10 +21,9 @@ pub fn game_iter(
         return Some(Outcome::Draw);
     }
 
-    if !game.stack.has(piece) {
+    if !game.stack.pick(piece) {
         return Some(Outcome::Illegal(player_idx));
     }
-    game.stack.pick(piece);
 
     let next_idx = (player_idx + 1) % PLAYER_COUNT;
     let next_player = players.get_mut(next_idx).unwrap();
