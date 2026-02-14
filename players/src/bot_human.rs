@@ -9,7 +9,7 @@ pub struct Human {
 }
 
 impl Player for Human {
-    fn give_piece(&mut self, game: &Game) -> usize {
+    fn give_piece(&mut self, game: &Game) -> Piece {
         println!("Type the piece you wish to give your opponent.");
         loop {
             self.buff.clear();
@@ -74,15 +74,12 @@ impl Player for Human {
                     };
 
                     let piece = Piece::new(bright, square, tall, hollow);
-                    let piece_idx = match game.stack.find(piece) {
-                        Some(i) => i,
-                        None => {
-                            println!("Piece \"{piece}\" is missing from the stack.");
-                            continue;
-                        }
+                    if !game.stack.has(piece) {
+                        println!("Piece \"{piece}\" is missing from the stack.");
+                        continue;
                     };
 
-                    return piece_idx;
+                    return piece;
                 }
                 Err(_) => {
                     println!("Error parsing input. Please try again.");
