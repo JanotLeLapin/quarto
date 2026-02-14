@@ -1,0 +1,15 @@
+[package]
+name = "quarto-wasm"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+quarto-core = { path = "../core" }
+quarto-players = { path = "../players" }
+
+getrandom = { version = "*", features = ["wasm_js"] }
+
+wasm-bindgen = "0.2"

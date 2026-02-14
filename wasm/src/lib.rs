@@ -1,0 +1,71 @@
+use quarto_core::{Board, Game, Piece, Stack};
+use wasm_bindgen::prelude::*;
+
+#[wasm_bindgen]
+pub struct QuartoEngine {
+    game: Game,
+    current_player: u8,
+    winner: Option<u8>,
+}
+
+#[wasm_bindgen]
+impl QuartoEngine {
+    #[wasm_bindgen(constructor)]
+    pub fn new() -> QuartoEngine {
+        QuartoEngine {
+            game: Game {
+                board: Board::new(),
+                stack: Stack::new(),
+            },
+            current_player: 0,
+            winner: None,
+        }
+    }
+
+    pub fn get_board(&self) -> Vec<u8> {
+        let mut flat = Vec::with_capacity(16);
+        for y in 0..4 {
+            for x in 0..4 {
+                flat.push(match self.game.board.get_piece(x, y) {
+                    Some(p) => p.0,
+                    None => 255,
+                });
+            }
+        }
+        flat
+    }
+
+    pub fn get_stack(&self) -> u16 {
+        self.game.stack.0
+    }
+
+    pub fn place_piece(&mut self, x: usize, y: usize, piece_id: u8) -> bool {
+        if self.winner.is_some() {
+            return false;
+        }
+
+        if self.game.board.get_piece(x, y).is_some() {
+            return false;
+        }
+
+        self.game.board.set_piece(x, y, Some(Piece(piece_id)));
+
+        if self.game.board.is_win(x, y) {
+            self.winner = Some(self.current_player);
+        }
+
+        true
+    }
+
+    pub fn pick_piece(&mut self, piece_id: u8) -> bool {
+        if self.winner.is_some() {
+            return false;
+        }
+
+        if self.game.stack.pick(Piece(piece_id)) {
+            self.current_player = (self.current_player + 1) % 2;
+            return true;
+        }
+        false
+    }
+}
