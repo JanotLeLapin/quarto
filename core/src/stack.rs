@@ -16,13 +16,13 @@ impl Stack {
         (self.0 & bit) == bit
     }
 
-    pub fn pick(&mut self, piece: Piece) {
-        if piece.0 > 0x0F {
-            return;
+    pub fn pick(&mut self, piece: Piece) -> bool {
+        if !self.has(piece) {
+            return false;
         }
 
-        let bit = 1 << piece.0;
-        self.0 &= !bit;
+        self.0 &= !(1 << piece.0);
+        true
     }
 }
 
@@ -44,7 +44,7 @@ mod tests {
         assert_eq!(true, stack.has(Piece(0b0101)));
         assert_eq!(false, stack.has(Piece(0b11111111)));
 
-        stack.pick(Piece(0b0010));
+        _ = stack.pick(Piece(0b0010));
         assert_eq!(false, stack.has(Piece(0b0010)));
         assert_eq!(true, stack.has(Piece(0b0101)));
         assert_eq!(false, stack.has(Piece(0b11111111)));
