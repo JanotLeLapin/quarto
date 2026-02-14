@@ -74,14 +74,7 @@ impl Player for Human {
                     };
 
                     let piece = Piece::new(bright, square, tall, hollow);
-                    let piece_idx = match game
-                        .stack
-                        .0
-                        .iter()
-                        .enumerate()
-                        .find(|(_, p)| Some(piece) == **p)
-                        .map(|(i, _)| i)
-                    {
+                    let piece_idx = match game.stack.find(piece) {
                         Some(i) => i,
                         None => {
                             println!("Piece \"{piece}\" is missing from the stack.");
