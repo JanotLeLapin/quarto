@@ -123,12 +123,8 @@
       updateStagedSlot(0xFF)
     }
 
-    document.getElementById("next").addEventListener("click", async (_) => {
-      const q = await quarto.getQuarto()
-      if (undefined != q.get_winner()) {
-        return
-      }
-
+    const q = await quarto.getQuarto()
+    while (undefined == q.get_winner()) {
       if (undefined != pieceToPlay) {
         await play()
         pieceToPlay = undefined
@@ -137,7 +133,7 @@
       }
 
       updateStatus()
-    })
+    }
   </script>
 
   <h1 id="status">Quarto</h1>
@@ -146,7 +142,7 @@
   <div id="staged"></div>
   <div id="stack"></div>
 
-  <button id="next">Next</button>
+  <!-- <button id="next">Next</button> -->
 </body>
 
 </html>
