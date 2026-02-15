@@ -12,7 +12,7 @@ pub struct DecisionTreeNode {
     depth: u8,
     score: f32,
     action: DecisionTreeAction,
-    children: Vec<Box<DecisionTreeNode>>,
+    children: Vec<DecisionTreeNode>,
 }
 
 pub fn explore(node: &mut DecisionTreeNode, my_turn: bool, max_depth: u8) {
@@ -55,7 +55,7 @@ pub fn explore(node: &mut DecisionTreeNode, my_turn: bool, max_depth: u8) {
                     } else {
                         node.score.min(child.score)
                     };
-                    node.children.push(Box::new(child));
+                    node.children.push(child);
                 }
             }
         }
@@ -87,7 +87,7 @@ pub fn explore(node: &mut DecisionTreeNode, my_turn: bool, max_depth: u8) {
                 } else {
                     node.score.min(child.score)
                 };
-                node.children.push(Box::new(child));
+                node.children.push(child);
             }
         }
     }
