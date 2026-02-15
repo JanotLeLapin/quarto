@@ -8,12 +8,13 @@
 </head>
 
 <body>
-  <script type="module">
+  <script defer type="module">
     import init, {QuartoEngine} from "./pkg/quarto_wasm.js";
 
     let quarto
 
     let boardSlots = []
+    let stagedSlot = document.getElementById("staged")
 
     let pieceToPlay = undefined
 
@@ -27,9 +28,15 @@
       }
     }
 
-    function updateBoardSlot(x, y, piece) {
-      const i = x * 4 + y
-      const slot = boardSlots[i]
+    function initStaged() {
+      stagedSlot.classList.add("piece")
+    }
+
+    function updateSlot(slot, piece) {
+      if (0xFF == piece) {
+        slot.classList = "piece"
+        return
+      }
 
       if ((piece & 0x01) == 0x01) {
         slot.classList.add("is-light")
@@ -54,6 +61,16 @@
       }
     }
 
+    function updateBoardSlot(x, y, piece) {
+      const i = x * 4 + y
+      const slot = boardSlots[i]
+      updateSlot(slot, piece)
+    }
+
+    function updateStagedSlot(piece) {
+      updateSlot(stagedSlot, piece)
+    }
+
     function updateStatus() {
       const winner = quarto.get_winner()
       if (winner) {
@@ -72,17 +89,21 @@
     function pick() {
       pieceToPlay = quarto.give_piece()
       quarto.pick_piece(pieceToPlay)
+      console.log("picked")
+      updateStagedSlot(pieceToPlay)
     }
 
     function play() {
       let [x, y] = quarto.play_piece(pieceToPlay)
       quarto.place_piece(x, y, pieceToPlay)
       updateBoardSlot(x, y, pieceToPlay)
+      updateStagedSlot(0xFF)
     }
 
     init().then(() => {
       quarto = new QuartoEngine()
       initBoard()
+      initStaged()
     });
 
     document.getElementById("next").addEventListener("click", (_) => {
@@ -105,6 +126,7 @@
   <h1 id="status">Player 0 is picking</h1>
 
   <div id="board"></div>
+  <div id="staged"></div>
 
   <button id="next">Next</button>
 </body>
