@@ -3,6 +3,7 @@ use crate::Piece;
 const EMPTY_SLOT: Piece = Piece(0b11110000);
 
 /// The standard 4x4 Quarto board.
+#[derive(Clone)]
 pub struct Board(pub [[Piece; 4]; 4]);
 
 impl Board {

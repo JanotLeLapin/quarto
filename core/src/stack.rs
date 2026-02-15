@@ -1,6 +1,7 @@
 use crate::Piece;
 
 /// The pieces that haven't been played yet.
+#[derive(Clone, Copy)]
 pub struct Stack(pub u16);
 
 impl Stack {
