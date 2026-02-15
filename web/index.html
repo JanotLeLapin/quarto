@@ -11,6 +11,8 @@
   <script defer type="module">
     import init, {QuartoEngine} from "./pkg/quarto_wasm.js";
 
+    const PLAYER_NAMES = ["random", "minimax"]
+
     let quarto
 
     let boardSlots = []
@@ -75,13 +77,13 @@
       const winner = quarto.get_winner()
       if (winner) {
         document.getElementById("status").textContent
-          = "Winner: " + winner
+          = "Winner: " + PLAYER_NAMES[winner]
         return
       }
 
       document.getElementById("status").textContent
         = "Player "
-        + quarto.get_current_player()
+        + PLAYER_NAMES[quarto.get_current_player()]
         + " is "
         + (pieceToPlay ? "playing" : "picking")
     }
@@ -123,7 +125,7 @@
     })
   </script>
 
-  <h1 id="status">Player 0 is picking</h1>
+  <h1 id="status">Quarto</h1>
 
   <div id="board"></div>
   <div id="staged"></div>
