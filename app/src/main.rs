@@ -33,11 +33,16 @@ pub fn game_iter(
     let (placed_piece_x, placed_piece_y) = placing_player.play_piece(game, given_piece);
 
     // Coordinates weren't empty
-    if game.board.get_piece(placed_piece_x, placed_piece_y).is_some() {
+    if game
+        .board
+        .get_piece(placed_piece_x, placed_piece_y)
+        .is_some()
+    {
         return Some(Outcome::Illegal(placing_player_id));
     }
 
-    game.board.set_piece(placed_piece_x, placed_piece_y, Some(given_piece));
+    game.board
+        .set_piece(placed_piece_x, placed_piece_y, Some(given_piece));
 
     if game.board.is_win(placed_piece_x, placed_piece_y) {
         return Some(Outcome::Win(placing_player_id));
