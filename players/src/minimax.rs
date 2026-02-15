@@ -93,7 +93,15 @@ pub fn explore(node: &mut DecisionTreeNode, my_turn: bool, max_depth: u8) {
     }
 }
 
-pub struct MinimaxBot;
+pub struct MinimaxBot {
+    max_depth: u8,
+}
+
+impl MinimaxBot {
+    pub fn new(max_depth: u8) -> Self {
+        Self { max_depth }
+    }
+}
 
 impl Player for MinimaxBot {
     fn give_piece(&mut self, game: &Game) -> Piece {
@@ -108,7 +116,7 @@ impl Player for MinimaxBot {
         explore(
             &mut tree,
             true,
-            game.stack.0.count_zeros().max(2).min(8) as u8,
+            game.stack.0.count_zeros().max(4).min(self.max_depth as u32) as u8,
         );
 
         match tree
@@ -136,7 +144,7 @@ impl Player for MinimaxBot {
         explore(
             &mut tree,
             true,
-            game.stack.0.count_zeros().max(2).min(8) as u8,
+            game.stack.0.count_zeros().max(4).min(self.max_depth as u32) as u8,
         );
 
         match tree
@@ -150,5 +158,11 @@ impl Player for MinimaxBot {
             },
             None => unreachable!(),
         }
+    }
+}
+
+impl Default for MinimaxBot {
+    fn default() -> Self {
+        Self::new(10)
     }
 }
