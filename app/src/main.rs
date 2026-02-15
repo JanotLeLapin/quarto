@@ -1,5 +1,5 @@
 use quarto_core::{Board, Game, Piece, Stack};
-use quarto_players::{Player, random::RandomBot};
+use quarto_players::{Player, minimax::MinimaxBot, random::RandomBot};
 
 const PLAYER_COUNT: usize = 2;
 
@@ -80,7 +80,7 @@ pub fn main() {
     }
 
     let p1 = RandomBot::default();
-    let p2 = RandomBot::default();
+    let p2 = MinimaxBot::default();
 
     let mut players: [Box<dyn Player>; 2] = [Box::new(p1), Box::new(p2)];
 
