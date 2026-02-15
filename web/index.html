@@ -84,16 +84,24 @@
 
     async function pick() {
       const q = await quarto.getQuarto()
-      if (HUMAN_IDX == q.get_current_player()) {
-        pieceToPlay = await userPromisePick
 
-        userPromisePick = new Promise((resolve, _) => {
-          userPromisePickResolve = resolve
-        })
-      } else {
-        pieceToPlay = q.give_piece()
+      while (true) {
+        if (HUMAN_IDX == q.get_current_player()) {
+          pieceToPlay = await userPromisePick
+
+          userPromisePick = new Promise((resolve, _) => {
+            userPromisePickResolve = resolve
+          })
+        } else {
+          pieceToPlay = q.give_piece()
+        }
+
+        if (q.pick_piece(pieceToPlay)) {
+          break
+        }
+
+        pieceToPlay = undefined
       }
-      q.pick_piece(pieceToPlay)
 
       updateStagedSlot(pieceToPlay)
       updateStackSlot(pieceToPlay)
@@ -103,20 +111,27 @@
       const q = await quarto.getQuarto()
       let x
       let y
-      if (HUMAN_IDX == q.get_current_player()) {
-        const piece = await userPromisePlay
-        x = Math.floor(piece / 4)
-        y = piece % 4
 
-        userPromisePlay = new Promise((resolve, _) => {
-          userPromisePlayResolve = resolve
-        })
-      } else {
-        const [rx, ry] = q.play_piece(pieceToPlay)
-        x = rx
-        y = ry
+      while (true) {
+        if (HUMAN_IDX == q.get_current_player()) {
+          const piece = await userPromisePlay
+          x = Math.floor(piece / 4)
+          y = piece % 4
+
+          userPromisePlay = new Promise((resolve, _) => {
+            userPromisePlayResolve = resolve
+          })
+        } else {
+          const [rx, ry] = q.play_piece(pieceToPlay)
+          x = rx
+          y = ry
+        }
+
+        if (q.place_piece(x, y, pieceToPlay)) {
+          break
+        }
       }
-      q.place_piece(x, y, pieceToPlay)
+
       updateBoardSlot(x, y, pieceToPlay)
       updateStagedSlot(0xFF)
     }
