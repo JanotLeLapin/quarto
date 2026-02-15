@@ -98,6 +98,10 @@ impl QuartoEngine {
         res
     }
 
+    pub fn get_current_player(&self) -> u8 {
+        self.current_player
+    }
+
     pub fn get_winner(&self) -> Option<u8> {
         self.winner
     }
