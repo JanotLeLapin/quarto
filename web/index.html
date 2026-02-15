@@ -72,29 +72,20 @@
     function pick() {
       pieceToPlay = quarto.give_piece()
       quarto.pick_piece(pieceToPlay)
-
-      console.log("will play " + pieceToPlay)
     }
 
     function play() {
       let [x, y] = quarto.play_piece(pieceToPlay)
       quarto.place_piece(x, y, pieceToPlay)
-      console.log("at " + x + ", " + y)
-
       updateBoardSlot(x, y, pieceToPlay)
     }
 
     init().then(() => {
       quarto = new QuartoEngine()
       initBoard()
-
-      console.log("initialized")
     });
 
     document.getElementById("next").addEventListener("click", (_) => {
-      console.log("clicked")
-      console.log(quarto.get_board())
-
       if (undefined != quarto.get_winner()) {
         console.log("winner: " + quarto.get_winner())
         return
