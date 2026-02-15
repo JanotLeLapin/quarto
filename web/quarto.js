@@ -27,13 +27,15 @@ export async function getQuarto() {
 }
 
 /**
+ * @param {(piece: number) => Promise<void>} cb
  * @returns {HTMLElement[]}
  */
-export function initBoard() {
+export function initBoard(cb) {
   const board = document.getElementById("board")
   const res = []
   for (let i = 0; i < 16; i++) {
     const slot = document.createElement("div")
+    slot.onclick = () => cb(i)
     slot.classList.add("piece")
     res.push(slot)
     board.appendChild(slot)
@@ -51,13 +53,15 @@ export function initStaged() {
 }
 
 /**
+ * @param {(piece: number) => Promise<void>} cb
  * @returns {HTMLElement[]}
  */
-export function initStack() {
+export function initStack(cb) {
   const stack = document.getElementById("stack")
   const res = []
   for (let i = 0; i < 16; i++) {
     const slot = document.createElement("div")
+    slot.onclick = () => cb(i)
     slot.classList.add("piece")
     updateSlot(slot, i)
     res.push(slot)

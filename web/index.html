@@ -11,11 +11,45 @@
   <script defer type="module">
     import * as quarto from "./quarto.js";
 
-    let boardSlots = quarto.initBoard()
-    let stagedSlot = quarto.initStaged()
-    let stackSlots = quarto.initStack()
+    const HUMAN_IDX = 0
+
+    let userPromisePlayResolve
+    let userPromisePlay = new Promise((resolve, _) => {
+      userPromisePlayResolve = resolve
+    })
+
+    let userPromisePickResolve
+    let userPromisePick = new Promise((resolve, _) => {
+      userPromisePickResolve = resolve
+    })
 
     let pieceToPlay = undefined
+
+    let boardSlots = quarto.initBoard(async (piece) => {
+      const q = await quarto.getQuarto()
+      if (HUMAN_IDX != q.get_current_player()) {
+        return
+      }
+
+      if (pieceToPlay == undefined) {
+        return
+      }
+
+      userPromisePlayResolve(piece)
+    })
+    let stagedSlot = quarto.initStaged()
+    let stackSlots = quarto.initStack(async (piece) => {
+      const q = await quarto.getQuarto()
+      if (HUMAN_IDX != q.get_current_player()) {
+        return
+      }
+
+      if (pieceToPlay != undefined) {
+        return
+      }
+
+      userPromisePickResolve(piece)
+    })
 
     function updateBoardSlot(x, y, piece) {
       const i = x * 4 + y
@@ -50,7 +84,16 @@
 
     async function pick() {
       const q = await quarto.getQuarto()
-      pieceToPlay = q.give_piece()
+      if (HUMAN_IDX == q.get_current_player()) {
+        pieceToPlay = await userPromisePick
+
+        userPromisePick = new Promise((resolve, _) => {
+          userPromisePickResolve = resolve
+        })
+      } else {
+        pieceToPlay = q.give_piece()
+      }
+      console.log(pieceToPlay)
       q.pick_piece(pieceToPlay)
       console.log("picked")
 
@@ -60,7 +103,21 @@
 
     async function play() {
       const q = await quarto.getQuarto()
-      let [x, y] = q.play_piece(pieceToPlay)
+      let x
+      let y
+      if (HUMAN_IDX == q.get_current_player()) {
+        const piece = await userPromisePlay
+        x = Math.floor(piece / 4)
+        y = piece % 4
+
+        userPromisePlay = new Promise((resolve, _) => {
+          userPromisePlayResolve = resolve
+        })
+      } else {
+        const [rx, ry] = q.play_piece(pieceToPlay)
+        x = rx
+        y = ry
+      }
       q.place_piece(x, y, pieceToPlay)
       updateBoardSlot(x, y, pieceToPlay)
       updateStagedSlot(0xFF)
