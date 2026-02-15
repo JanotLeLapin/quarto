@@ -50,6 +50,22 @@ export function initStaged() {
   return staged
 }
 
+/**
+ * @returns {HTMLElement[]}
+ */
+export function initStack() {
+  const stack = document.getElementById("stack")
+  const res = []
+  for (let i = 0; i < 16; i++) {
+    const slot = document.createElement("div")
+    slot.classList.add("piece")
+    updateSlot(slot, i)
+    res.push(slot)
+    stack.appendChild(slot)
+  }
+  return res
+}
+
 export function updateSlot(slot, piece) {
   if (0xFF == piece) {
     slot.classList = "piece"

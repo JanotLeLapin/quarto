@@ -19,6 +19,12 @@ body {
   height: 400px;
 }
 
+#stack {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 4rem 1rem;
+}
+
 .piece {
   width: 70px;
   height: 70px;

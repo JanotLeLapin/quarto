@@ -13,6 +13,7 @@
 
     let boardSlots = quarto.initBoard()
     let stagedSlot = quarto.initStaged()
+    let stackSlots = quarto.initStack()
 
     let pieceToPlay = undefined
 
@@ -20,6 +21,11 @@
       const i = x * 4 + y
       const slot = boardSlots[i]
       quarto.updateSlot(slot, piece)
+    }
+
+    function updateStackSlot(piece) {
+      const slot = stackSlots[piece]
+      quarto.updateSlot(slot, 0xFF)
     }
 
     function updateStagedSlot(piece) {
@@ -47,7 +53,9 @@
       pieceToPlay = q.give_piece()
       q.pick_piece(pieceToPlay)
       console.log("picked")
+
       updateStagedSlot(pieceToPlay)
+      updateStackSlot(pieceToPlay)
     }
 
     async function play() {
@@ -79,6 +87,7 @@
 
   <div id="board"></div>
   <div id="staged"></div>
+  <div id="stack"></div>
 
   <button id="next">Next</button>
 </body>
