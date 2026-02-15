@@ -54,9 +54,18 @@
       }
     }
 
+    function updateStatus() {
+      document.getElementById("status").textContent
+        = "Player "
+        + quarto.get_current_player()
+        + " is "
+        + (pieceToPlay ? "playing" : "picking")
+    }
+
     function pick() {
       pieceToPlay = quarto.give_piece()
       quarto.pick_piece(pieceToPlay)
+
       console.log("will play " + pieceToPlay)
     }
 
@@ -90,8 +99,12 @@
       } else {
         pick()
       }
+
+      updateStatus()
     })
   </script>
+
+  <h1 id="status">Player 0 is picking</h1>
 
   <div id="board"></div>
 
