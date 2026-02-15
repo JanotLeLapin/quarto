@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <title>quarto example</title>
+  <link rel="stylesheet" href="quarto.css" />
 </head>
 
 <body>
@@ -35,6 +36,25 @@
       console.log("at " + x + ", " + y)
     })
   </script>
+
+  <div class="board">
+    <div class="piece is-light is-square is-tall"></div>
+    <div class="piece is-light is-square is-tall is-hollow"></div>
+    <div class="piece is-light is-square is-short"></div>
+    <div class="piece is-light is-square is-short is-hollow"></div>
+    <div class="piece is-light is-circle is-tall"></div>
+    <div class="piece is-light is-circle is-tall is-hollow"></div>
+    <div class="piece is-light is-circle is-short"></div>
+    <div class="piece is-light is-circle is-short is-hollow"></div>
+    <div class="piece is-dark is-square is-tall"></div>
+    <div class="piece is-dark is-square is-tall is-hollow"></div>
+    <div class="piece is-dark is-square is-short"></div>
+    <div class="piece is-dark is-square is-short is-hollow"></div>
+    <div class="piece is-dark is-circle is-tall"></div>
+    <div class="piece is-dark is-circle is-tall is-hollow"></div>
+    <div class="piece is-dark is-circle is-short"></div>
+    <div class="piece is-dark is-circle is-short is-hollow"></div>
+  </div>
 
   <button id="next">Next</button>
 </body>
