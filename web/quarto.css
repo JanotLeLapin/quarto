@@ -3,7 +3,11 @@
   --board-bg: oklch(27.8% 0.033 256.848);
 }
 
-.board {
+body {
+  background: var(--bg);
+}
+
+#board {
   background-color: var(--board-bg);
   display: grid;
   grid-template-columns: repeat(4, 1fr);

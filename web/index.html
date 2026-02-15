@@ -13,8 +13,49 @@
 
     let quarto
 
+    let boardSlots = []
+
+    function initBoard() {
+      const board = document.getElementById("board")
+      for (let i = 0; i < 16; i++) {
+        const slot = document.createElement("div")
+        slot.classList.add("piece")
+        boardSlots.push(slot)
+        board.appendChild(slot)
+      }
+    }
+
+    function updateBoardSlot(x, y, piece) {
+      const i = x * 4 + y
+      const slot = boardSlots[i]
+
+      if ((piece & 0x01) == 0x01) {
+        slot.classList.add("is-light")
+      } else {
+        slot.classList.add("is-dark")
+      }
+
+      if ((piece & 0x02) == 0x02) {
+        slot.classList.add("is-square")
+      } else {
+        slot.classList.add("is-circle")
+      }
+
+      if ((piece & 0x04) == 0x04) {
+        slot.classList.add("is-tall")
+      } else {
+        slot.classList.add("is-short")
+      }
+
+      if ((piece & 0x08) == 0x08) {
+        slot.classList.add("is-hollow")
+      }
+    }
+
     init().then(() => {
       quarto = new QuartoEngine()
+      initBoard()
+
       console.log("initialized")
     });
 
@@ -34,27 +75,12 @@
       let [x, y] = quarto.play_piece(piece)
       quarto.place_piece(x, y, piece)
       console.log("at " + x + ", " + y)
+
+      updateBoardSlot(x, y, piece)
     })
   </script>
 
-  <div class="board">
-    <div class="piece is-light is-square is-tall"></div>
-    <div class="piece is-light is-square is-tall is-hollow"></div>
-    <div class="piece is-light is-square is-short"></div>
-    <div class="piece is-light is-square is-short is-hollow"></div>
-    <div class="piece is-light is-circle is-tall"></div>
-    <div class="piece is-light is-circle is-tall is-hollow"></div>
-    <div class="piece is-light is-circle is-short"></div>
-    <div class="piece is-light is-circle is-short is-hollow"></div>
-    <div class="piece is-dark is-square is-tall"></div>
-    <div class="piece is-dark is-square is-tall is-hollow"></div>
-    <div class="piece is-dark is-square is-short"></div>
-    <div class="piece is-dark is-square is-short is-hollow"></div>
-    <div class="piece is-dark is-circle is-tall"></div>
-    <div class="piece is-dark is-circle is-tall is-hollow"></div>
-    <div class="piece is-dark is-circle is-short"></div>
-    <div class="piece is-dark is-circle is-short is-hollow"></div>
-  </div>
+  <div id="board"></div>
 
   <button id="next">Next</button>
 </body>
