@@ -17,6 +17,7 @@ pub struct DecisionTreeNode {
 
 pub fn explore(node: &mut DecisionTreeNode, my_turn: bool, max_depth: u8) {
     if node.depth >= max_depth {
+        node.score = 0.0;
         return;
     }
 
@@ -34,22 +35,26 @@ pub fn explore(node: &mut DecisionTreeNode, my_turn: bool, max_depth: u8) {
                     let mut child = DecisionTreeNode {
                         game: child_game,
                         depth: node.depth + 1,
-                        score: f32::NEG_INFINITY,
+                        score: if my_turn {
+                            f32::NEG_INFINITY
+                        } else {
+                            f32::INFINITY
+                        },
                         action: DecisionTreeAction::Play((x as u8, y as u8)),
                         children: Vec::with_capacity(16 - node.depth as usize),
                     };
 
                     if child.game.board.is_win(x, y) {
-                        child.score = if my_turn {
-                            f32::INFINITY
-                        } else {
-                            f32::NEG_INFINITY
-                        };
+                        child.score = if my_turn { 100.0 } else { -100.0 };
                     } else {
                         explore(&mut child, my_turn, max_depth);
                     }
 
-                    node.score += child.score;
+                    node.score = if my_turn {
+                        node.score.max(child.score)
+                    } else {
+                        node.score.min(child.score)
+                    };
                     node.children.push(Box::new(child));
                 }
             }
@@ -66,13 +71,22 @@ pub fn explore(node: &mut DecisionTreeNode, my_turn: bool, max_depth: u8) {
                 let mut child = DecisionTreeNode {
                     game: child_game,
                     depth: node.depth + 1,
-                    score: f32::NEG_INFINITY,
+                    score: if my_turn {
+                        f32::INFINITY
+                    } else {
+                        f32::NEG_INFINITY
+                    },
                     action: DecisionTreeAction::Pick(p),
                     children: Vec::with_capacity(16 - node.depth as usize),
                 };
 
                 explore(&mut child, !my_turn, max_depth);
-                node.score += child.score;
+
+                node.score = if my_turn {
+                    node.score.max(child.score)
+                } else {
+                    node.score.min(child.score)
+                };
                 node.children.push(Box::new(child));
             }
         }
