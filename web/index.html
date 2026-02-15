@@ -15,6 +15,8 @@
 
     let boardSlots = []
 
+    let pieceToPlay = undefined
+
     function initBoard() {
       const board = document.getElementById("board")
       for (let i = 0; i < 16; i++) {
@@ -52,6 +54,20 @@
       }
     }
 
+    function pick() {
+      pieceToPlay = quarto.give_piece()
+      quarto.pick_piece(pieceToPlay)
+      console.log("will play " + pieceToPlay)
+    }
+
+    function play() {
+      let [x, y] = quarto.play_piece(pieceToPlay)
+      quarto.place_piece(x, y, pieceToPlay)
+      console.log("at " + x + ", " + y)
+
+      updateBoardSlot(x, y, pieceToPlay)
+    }
+
     init().then(() => {
       quarto = new QuartoEngine()
       initBoard()
@@ -68,15 +84,12 @@
         return
       }
 
-      let piece = quarto.give_piece()
-      quarto.pick_piece(piece)
-      console.log("will play " + piece)
-
-      let [x, y] = quarto.play_piece(piece)
-      quarto.place_piece(x, y, piece)
-      console.log("at " + x + ", " + y)
-
-      updateBoardSlot(x, y, piece)
+      if (pieceToPlay) {
+        play()
+        pieceToPlay = undefined
+      } else {
+        pick()
+      }
     })
   </script>
 
