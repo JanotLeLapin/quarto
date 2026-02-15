@@ -9,116 +9,66 @@
 
 <body>
   <script defer type="module">
-    import init, {QuartoEngine} from "./pkg/quarto_wasm.js";
+    import * as quarto from "./quarto.js";
 
-    const PLAYER_NAMES = ["random", "minimax"]
-
-    let quarto
-
-    let boardSlots = []
-    let stagedSlot = document.getElementById("staged")
+    let boardSlots = quarto.initBoard()
+    let stagedSlot = quarto.initStaged()
 
     let pieceToPlay = undefined
-
-    function initBoard() {
-      const board = document.getElementById("board")
-      for (let i = 0; i < 16; i++) {
-        const slot = document.createElement("div")
-        slot.classList.add("piece")
-        boardSlots.push(slot)
-        board.appendChild(slot)
-      }
-    }
-
-    function initStaged() {
-      stagedSlot.classList.add("piece")
-    }
-
-    function updateSlot(slot, piece) {
-      if (0xFF == piece) {
-        slot.classList = "piece"
-        return
-      }
-
-      if ((piece & 0x01) == 0x01) {
-        slot.classList.add("is-light")
-      } else {
-        slot.classList.add("is-dark")
-      }
-
-      if ((piece & 0x02) == 0x02) {
-        slot.classList.add("is-square")
-      } else {
-        slot.classList.add("is-circle")
-      }
-
-      if ((piece & 0x04) == 0x04) {
-        slot.classList.add("is-tall")
-      } else {
-        slot.classList.add("is-short")
-      }
-
-      if ((piece & 0x08) == 0x08) {
-        slot.classList.add("is-hollow")
-      }
-    }
 
     function updateBoardSlot(x, y, piece) {
       const i = x * 4 + y
       const slot = boardSlots[i]
-      updateSlot(slot, piece)
+      quarto.updateSlot(slot, piece)
     }
 
     function updateStagedSlot(piece) {
-      updateSlot(stagedSlot, piece)
+      quarto.updateSlot(stagedSlot, piece)
     }
 
-    function updateStatus() {
-      const winner = quarto.get_winner()
+    async function updateStatus() {
+      const q = await quarto.getQuarto()
+      const winner = q.get_winner()
       if (winner) {
         document.getElementById("status").textContent
-          = "Winner: " + PLAYER_NAMES[winner]
+          = "Winner: " + quarto.getPlayerNames()[winner]
         return
       }
 
       document.getElementById("status").textContent
         = "Player "
-        + PLAYER_NAMES[quarto.get_current_player()]
+        + quarto.getPlayerNames()[q.get_current_player()]
         + " is "
         + (pieceToPlay ? "playing" : "picking")
     }
 
-    function pick() {
-      pieceToPlay = quarto.give_piece()
-      quarto.pick_piece(pieceToPlay)
+    async function pick() {
+      const q = await quarto.getQuarto()
+      pieceToPlay = q.give_piece()
+      q.pick_piece(pieceToPlay)
       console.log("picked")
       updateStagedSlot(pieceToPlay)
     }
 
-    function play() {
-      let [x, y] = quarto.play_piece(pieceToPlay)
-      quarto.place_piece(x, y, pieceToPlay)
+    async function play() {
+      const q = await quarto.getQuarto()
+      let [x, y] = q.play_piece(pieceToPlay)
+      q.place_piece(x, y, pieceToPlay)
       updateBoardSlot(x, y, pieceToPlay)
       updateStagedSlot(0xFF)
     }
 
-    init().then(() => {
-      quarto = new QuartoEngine()
-      initBoard()
-      initStaged()
-    });
-
-    document.getElementById("next").addEventListener("click", (_) => {
-      if (undefined != quarto.get_winner()) {
-        console.log("winner: " + quarto.get_winner())
+    document.getElementById("next").addEventListener("click", async (_) => {
+      const q = await quarto.getQuarto()
+      if (undefined != q.get_winner()) {
         return
       }
 
       if (undefined != pieceToPlay) {
-        play()
+        await play()
         pieceToPlay = undefined
       } else {
-        pick()
+        await pick()
       }
 
       updateStatus()
