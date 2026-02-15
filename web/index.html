@@ -55,6 +55,13 @@
     }
 
     function updateStatus() {
+      const winner = quarto.get_winner()
+      if (winner) {
+        document.getElementById("status").textContent
+          = "Winner: " + winner
+        return
+      }
+
       document.getElementById("status").textContent
         = "Player "
         + quarto.get_current_player()
