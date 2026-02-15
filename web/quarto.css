@@ -1,9 +1,11 @@
 :root {
+  --fg: oklch(92.8% 0.006 264.531);
   --bg: oklch(21% 0.034 264.665);
   --board-bg: oklch(27.8% 0.033 256.848);
 }
 
 body {
+  color: var(--fg);
   background: var(--bg);
 }
 
